@@ -93,9 +93,9 @@ async def stats_command(ctx):
     await ctx.send(embed=embed)
 
 
-@bot.command(name="help")
+@bot.command(name="commands")
 async def help_command(ctx):
-    embed = discord.Embed(title="Blocknet Bot Commands", color=0xAAFF00)
+    embed = discord.Embed(title="Blocknet Bot — Commands", color=0xAAFF00)
     embed.add_field(name="!bnt", value="Show network stats and recent blocks", inline=False)
     embed.add_field(name="!tx <hash>", value="Look up a transaction by hash", inline=False)
     embed.add_field(name="!block <hash_or_height>", value="Look up a block by hash or height", inline=False)
