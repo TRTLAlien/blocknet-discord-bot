@@ -22,6 +22,9 @@ async def fetch_props(url: str) -> dict:
     vals = soup.select("div.prop-v")
     for k, v in zip(keys, vals):
         props[k.get_text(strip=True)] = v.get_text(strip=True)
+    if not props:
+        text = soup.get_text(strip=True)
+        raise ValueError(text[:200] if text else "Not found")
     return props, soup
 
 
