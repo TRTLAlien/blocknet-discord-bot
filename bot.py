@@ -41,7 +41,7 @@ async def fetch_stats() -> dict:
     return stats
 
 
-@bot.command(name="stats")
+@bot.command(name="bnt")
 async def stats_command(ctx):
     async with ctx.typing():
         try:
