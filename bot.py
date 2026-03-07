@@ -47,10 +47,11 @@ async def fetch_stats() -> dict:
     rows = soup.select("table tr")[1:]  # skip header
     for row in rows[:5]:
         cols = row.select("td")
-        if len(cols) >= 3:
+        if len(cols) >= 4:
             height = cols[0].get_text(strip=True)
             age = cols[2].get_text(strip=True)
-            blocks.append((height, age))
+            txs = cols[3].get_text(strip=True)
+            blocks.append((height, age, txs))
 
     stats["_blocks"] = blocks
     return stats
@@ -83,12 +84,22 @@ async def stats_command(ctx):
         "Emission Progress": "Emission Progress",
     }
 
+    def fmt_millions(val: str) -> str:
+        try:
+            n = float(val.replace(",", ""))
+            return f"{n / 1_000_000:.1f}M"
+        except ValueError:
+            return val
+
     for key, label in field_map.items():
         if key in data:
-            embed.add_field(name=label, value=data[key], inline=True)
+            value = data[key]
+            if key in ("Coins Emitted", "Remaining (pre-tail)"):
+                value = fmt_millions(value)
+            embed.add_field(name=label, value=value, inline=True)
 
     if blocks:
-        lines = [f"`{h}` — {age}" for h, age in blocks]
+        lines = [f"`{h}` — {age} — {txs} tx" for h, age, txs in blocks]
         embed.add_field(name="Recent Blocks", value="\n".join(lines), inline=False)
 
     embed.set_footer(text="explorer.blocknetcrypto.com")
