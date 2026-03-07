@@ -49,9 +49,8 @@ async def fetch_stats() -> dict:
         cols = row.select("td")
         if len(cols) >= 3:
             height = cols[0].get_text(strip=True)
-            age = cols[1].get_text(strip=True)
-            txs = cols[2].get_text(strip=True)
-            blocks.append((height, age, txs))
+            age = cols[2].get_text(strip=True)
+            blocks.append((height, age))
 
     stats["_blocks"] = blocks
     return stats
@@ -89,7 +88,7 @@ async def stats_command(ctx):
             embed.add_field(name=label, value=data[key], inline=True)
 
     if blocks:
-        lines = [f"`{h}` — {age} — {txs} tx" for h, age, txs in blocks]
+        lines = [f"`{h}` — {age}" for h, age in blocks]
         embed.add_field(name="Recent Blocks", value="\n".join(lines), inline=False)
 
     embed.set_footer(text="explorer.blocknetcrypto.com")
